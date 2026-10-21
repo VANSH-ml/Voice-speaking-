@@ -58,11 +58,10 @@ function BackendBanner() {
             </span>
           ) : (
             <span>
-              Backend is not reachable. Start FastAPI with{' '}
-              <code className="font-mono bg-red-500/20 px-1 rounded">
-                uvicorn app.main:app --reload --port 8000
-              </code>{' '}
-              inside the <code className="font-mono bg-red-500/20 px-1 rounded">backend/</code> directory.
+              {import.meta.env.DEV
+                ? <>Backend not reachable locally. Run <code className="font-mono bg-red-500/20 px-1 rounded">uvicorn app.main:app --reload --port 8000</code> in the <code className="font-mono bg-red-500/20 px-1 rounded">backend/</code> folder.</>
+                : <>Backend is temporarily unreachable. Please refresh the page or try again in a moment.</>
+              }
             </span>
           )}
           <button

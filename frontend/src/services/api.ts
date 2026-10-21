@@ -1,6 +1,7 @@
 /**
- * Typed API client — all requests go through the Vite proxy to /api
- * so no API keys are ever in the browser.
+ * Typed API client.
+ * - In development: requests go through Vite proxy (/api → localhost:8000)
+ * - In production:  VITE_API_URL env var points directly at the deployed backend
  */
 
 import axios, { AxiosError } from 'axios'
@@ -15,8 +16,20 @@ import type {
   TranslationResult,
 } from '@/types'
 
+// Priority order:
+// 1. VITE_API_URL env var set at build time (Vercel env var)
+// 2. Hardcoded production backend URL (fallback so deployed app always works)
+// 3. /api  (Vite proxy in local dev)
+const PROD_BACKEND = 'https://voice-speaking-dcfv.vercel.app'
+
+const BASE_URL = import.meta.env.VITE_API_URL
+  ? `${import.meta.env.VITE_API_URL}/api`
+  : import.meta.env.DEV
+    ? '/api'
+    : `${PROD_BACKEND}/api`
+
 const client = axios.create({
-  baseURL: '/api',
+  baseURL: BASE_URL,
   timeout: 60_000,
   headers: { 'Content-Type': 'application/json' },
 })
